@@ -254,48 +254,38 @@ function getFurnitureSize(id: string): [number, number] {
 // ---------- interativos ----------
 interface Inter { x: number; z: number; r: number; label: string; icon: string; action: () => void }
 
-function useInteractables() {
-  return useMemo<Inter[]>(() => {
-    const st = () => useForge.getState();
-    return [
-      { x: 9.3, z: 1, r: 1.7, label: "Abrir Geladeira", icon: "🍎", action: () => st().openPanel("food") },
-      { x: 5, z: 4.5, r: 1.7, label: "Beber água", icon: "💧", action: () => st().drink() },
-      { x: 8, z: -6, r: 2.1, label: "Tomar banho", icon: "🛁", action: () => st().startBath() },
-      { x: -8, z: -6, r: 2.2, label: "Dormir", icon: "😴", action: () => st().toggleSleep() },
-      { x: -6.5, z: 5, r: 2, label: "Relaxar no sofá", icon: "🛋️", action: () => st().watchTV() },
-      { x: -2, z: 7.45, r: 1.9, label: "Assistir TV", icon: "📺", action: () => st().watchTV() },
-      { x: -1.5, z: -7.3, r: 1.8, label: "Guarda-Roupa", icon: "👕", action: () => st().openPanel("wardrobe") },
-      { x: 9.55, z: -2, r: 1.7, label: "Espelho", icon: "🪞", action: () => st().openPanel("customize") },
-      { x: -0.5, z: 7.2, r: 2, label: "Jogar Arcade", icon: "🕹️", action: () => st().openPanel("minigames") },
-      { x: -8, z: 6, r: 1.6, label: "Brincar com bola", icon: "🏀", action: () => st().playToy("ball") },
-      { x: 0, z: 16, r: 2.2, label: "Brincar na fonte", icon: "⛲", action: () => st().playToy("ball2") },
-      { x: -5, z: 13, r: 1.6, label: "Descansar no banco", icon: "🧘", action: () => st().watchTV() },
-      { x: 18, z: 4.6, r: 2.3, label: "Clínica Veterinária", icon: "🏥", action: () => {
-        const s2 = st();
-        if (s2.sick) s2.heal();
-        else s2.notifyMsg("🏥", s2.settings.lang === "pt" ? "Tudo em ordem! Volte se o pet passar mal." : "All good!");
-      } },
-      { x: 0, z: 34, r: 2.3, label: "Brincar na fonte do parque", icon: "🎾", action: () => st().playToy("frisbee") },
-    ];
-  }, []);
-}
+const INTERACTABLES: Inter[] = (() => {
+  const st = () => useForge.getState();
+  return [
+    { x: 9.3, z: 1, r: 1.7, label: "Abrir Geladeira", icon: "🍎", action: () => st().openPanel("food") },
+    { x: 5, z: 4.5, r: 1.7, label: "Beber água", icon: "💧", action: () => st().drink() },
+    { x: 8, z: -6, r: 2.1, label: "Tomar banho", icon: "🛁", action: () => st().startBath() },
+    { x: -8, z: -6, r: 2.2, label: "Dormir", icon: "😴", action: () => st().toggleSleep() },
+    { x: -6.5, z: 5, r: 2, label: "Relaxar no sofá", icon: "🛋️", action: () => st().watchTV() },
+    { x: -2, z: 7.45, r: 1.9, label: "Assistir TV", icon: "📺", action: () => st().watchTV() },
+    { x: -1.5, z: -7.3, r: 1.8, label: "Guarda-Roupa", icon: "👕", action: () => st().openPanel("wardrobe") },
+    { x: 9.55, z: -2, r: 1.7, label: "Espelho", icon: "🪞", action: () => st().openPanel("customize") },
+    { x: -0.5, z: 7.2, r: 2, label: "Jogar Arcade", icon: "🕹️", action: () => st().openPanel("minigames") },
+    { x: -8, z: 6, r: 1.6, label: "Brincar com bola", icon: "🏀", action: () => st().playToy("ball") },
+    { x: 0, z: 16, r: 2.2, label: "Brincar na fonte", icon: "⛲", action: () => st().playToy("ball2") },
+    { x: -5, z: 13, r: 1.6, label: "Descansar no banco", icon: "🧘", action: () => st().watchTV() },
+    { x: 18, z: 4.6, r: 2.3, label: "Clínica Veterinária", icon: "🏥", action: () => {
+      const s2 = st();
+      if (s2.sick) s2.heal();
+      else s2.notifyMsg("🏥", s2.settings.lang === "pt" ? "Tudo em ordem! Volte se o pet passar mal." : "All good!");
+    } },
+    { x: 0, z: 34, r: 2.3, label: "Brincar na fonte do parque", icon: "🎾", action: () => st().playToy("frisbee") },
+  ];
+})();
 
 function nearestInteract(x: number, z: number): Inter | null {
-  const list = useInteractablesCache();
   let best: Inter | null = null;
   let bd = Infinity;
-  for (const it of list) {
+  for (const it of INTERACTABLES) {
     const d = Math.hypot(it.x - x, it.z - z);
     if (d < it.r && d < bd) { bd = d; best = it; }
   }
   return best;
-}
-
-let _interCache: Inter[] = [];
-function useInteractablesCache() {
-  const list = useInteractables();
-  if (list !== _interCache) _interCache = list;
-  return _interCache;
 }
 
 // ---------- Cena ----------
