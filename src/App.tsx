@@ -35,7 +35,11 @@ export default function App() {
   useEffect(() => {
     if (screen !== "splash") return;
     const t1 = setTimeout(() => setSplashStep(1), 1800);
-    return () => clearTimeout(t1);
+    const t2 = setTimeout(() => useForge.getState().setScreen("title"), 2600);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [screen]);
 
   // tick do jogo
@@ -106,7 +110,8 @@ export default function App() {
               className="btn btn-forge anim-bubble pointer-events-auto mt-10 !rounded-full !px-10 !py-4 text-lg"
               onClick={() => {
                 sound.unlock();
-                useForge.getState().setScreen("menu");
+                const state = useForge.getState();
+                state.setScreen(state.roster.length > 0 ? "menu" : "create");
               }}
             >
               🐾 TOQUE PARA COMEÇAR
@@ -336,5 +341,6 @@ function ColorRow({ label, value, onChange }: { label: string; value: string; on
     </div>
   );
 }
+
 
 
