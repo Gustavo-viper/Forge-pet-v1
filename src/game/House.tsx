@@ -791,8 +791,9 @@ function WanderPet({ x, z, species, fur }: { x: number; z: number; species: "dog
 // ---------- Canvas principal ----------
 export function GameCanvas() {
   return (
-    <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 6, 12], fov: 50 }}>
+    <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 4, 3], fov: 50 }}>
       <House />
     </Canvas>
   );
 }
+
