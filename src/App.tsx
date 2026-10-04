@@ -131,7 +131,7 @@ export default function App() {
         </div>
       )}
 
-      // ===== CRIAÇÃO DE PERFIL =====
+      {/* ===== CRIAÇÃO DE PERFIL ===== */}
       {screen === "create" && <CreateScreen />}
 
       {/* ===== MENU PRINCIPAL ===== */}
