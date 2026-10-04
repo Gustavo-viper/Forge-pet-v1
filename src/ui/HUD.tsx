@@ -302,7 +302,7 @@ export function MenuButtons() {
   const aiMode = useForge((s) => s.aiMode);
   const setAI = useForge((s) => s.setAI);
   return (
-    <div className="pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1.5 sm:bottom-5">
+    <div className="pointer-events-auto absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1.5 sm:bottom-5">
       <button className="btn btn-ghost !rounded-xl !px-3 !py-2 text-[11px]" onClick={() => openPanel("pets")}>🐾 Pets</button>
       <button className="btn btn-ghost !rounded-xl !px-3 !py-2 text-[11px]" onClick={() => openPanel("customize")}>🎨 Aparência</button>
       <button className="btn btn-ghost !rounded-xl !px-3 !py-2 text-[11px]" onClick={() => openPanel("decorate")}>🔨 Decorar</button>
@@ -328,3 +328,4 @@ export function Announcement() {
     </div>
   );
 }
+
