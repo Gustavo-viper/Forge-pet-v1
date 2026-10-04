@@ -114,7 +114,7 @@ export default function App() {
                 state.setScreen(state.roster.length > 0 ? "menu" : "create");
               }}
             >
-              🐾 TOQUE PARA COMEÇAR
+              {roster.length > 0 ? "🐾 TOQUE PARA COMEÇAR" : "🐾 CRIAR MEU PET"}
             </button>
             {useForge.getState().roster.length > 0 && (
               <button
@@ -146,7 +146,7 @@ export default function App() {
                 {pet ? `${pet.name} · ${SPECIES.find((s) => s.id === pet.species)?.name}` : "Bem-vindo!"}
               </div>
             </div>
-            <MenuBtn icon="▶️" label={t("startGame", lang)} primary onClick={() => { sound.click(); useForge.getState().setScreen("game"); }} />
+            <MenuBtn icon="▶️" label={pet ? t("startGame", lang) : "Criar meu pet"} primary onClick={() => { sound.click(); const state = useForge.getState(); state.setScreen(state.roster.length > 0 ? "game" : "create"); }} />
             <MenuBtn icon="🐾" label={t("myPet", lang)} onClick={() => useForge.getState().openPanel("pets")} />
             <MenuBtn icon="🏠" label={t("myHouse", lang)} onClick={() => useForge.getState().openPanel("decorate")} />
             <MenuBtn icon="🌎" label={t("world", lang)} onClick={() => useForge.getState().openPanel("world")} />
