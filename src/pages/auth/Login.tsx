@@ -6,9 +6,10 @@ import { Button, Field, Input } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import { useToast } from "@/components/toast";
 import { firstName, isEmail } from "@/lib/format";
+import { ADMIN_CREDENTIALS } from "@/lib/seed";
 
 export default function Login() {
-  const { login } = useStore();
+  const { login, adminLogin } = useStore();
   const nav = useNavigate();
   const [params] = useSearchParams();
   const next = params.get("next") || "/cliente";
@@ -29,6 +30,14 @@ export default function Login() {
     if (Object.keys(er).length) return;
     setLoading(true);
     setTimeout(() => {
+      // Conta demo de administração também funciona aqui e leva direto ao painel.
+      if (email.trim().toLowerCase() === ADMIN_CREDENTIALS.email) {
+        const a = adminLogin(email, password);
+        setLoading(false);
+        if (!a.ok) return setErrors({ form: a.error });
+        toast("Acesso administrativo liberado.");
+        return nav("/admin", { replace: true });
+      }
       const r = login(email, password);
       setLoading(false);
       if (!r.ok) return setErrors({ form: r.error });
@@ -40,7 +49,10 @@ export default function Login() {
   return (
     <AuthShell title="Entrar" subtitle="Acesse sua conta para agendar e acompanhar seus horários."
       demo={<><strong>Conta demonstrativa:</strong> cliente@demo.com · senha 123456{" "}
-        <button type="button" className="ml-1 font-bold underline" onClick={() => { setEmail("cliente@demo.com"); setPassword("123456"); }}>preencher</button></>}>
+        <button type="button" className="ml-1 font-bold underline" onClick={() => { setEmail("cliente@demo.com"); setPassword("123456"); }}>preencher</button>
+        <br /><strong>Administração:</strong> {ADMIN_CREDENTIALS.email} · senha {ADMIN_CREDENTIALS.password}{" "}
+        <button type="button" className="ml-1 font-bold underline" onClick={() => { setEmail(ADMIN_CREDENTIALS.email); setPassword(ADMIN_CREDENTIALS.password); }}>preencher</button>
+        {" · "}<Link to="/admin/login" className="font-bold underline">painel admin</Link></>}>
       <form onSubmit={submit} noValidate className="space-y-5">
         {errors.form && <p role="alert" className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errors.form}</p>}
         <Field label="E-mail" error={errors.email} required>
